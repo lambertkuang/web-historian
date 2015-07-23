@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <!--<link rel="stylesheet" type="text/css" href="styles.css" />-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
@@ -21,10 +21,13 @@
            success: function(data)
            {
                alert(data); // show response from the php script.
+           },
+           error: function(e) {
+            console.log(e)
            }
          });
 
-    return false; // avoid to execute the actual submit of the form.
+    // avoid to execute the actual submit of the form.
 });
  </script>
 

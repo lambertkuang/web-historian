@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-
+var http = require('http');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -25,9 +25,9 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(callback){
+exports.readListOfUrls = function(callback,path){
   //should read urls from sites.txt
-
+  exports.paths.list = path || exports.paths.list;
   fs.readFile(exports.paths.list,function(err,data){
     
     if (err){
@@ -57,10 +57,9 @@ exports.isUrlInList = function(target,callback){
 
 exports.addUrlToList = function(url,callback){
 
-  
-    
     //add to sites.txt 
     if (callback()){
+      console.log('path: ' + exports.paths.list + url)
       fs.appendFile(exports.paths.list,url,function(err){
         
           if (err){
@@ -70,14 +69,34 @@ exports.addUrlToList = function(url,callback){
       });
     }
 
-  
-  
-    
-  
 };
 
-exports.isUrlArchived = function(){
+exports.isUrlArchived = function(url, callback){
+   fs.exists(path.join(exports.paths.archivedSites,url),function(exists){
+      if (exists){
+        callback(true);
+      } else {
+        callback(false);
+      }
+   });
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrls = function(urls){
+  _.each(urls,function(url){
+     var file = fs.createWriteStream(path.join(exports.paths.archivedSites, url));
+    //var file = fs.createWriteStream(url);
+    exports.isUrlArchived(url,function(exists){
+      // if (!exists){
+        var request = http.get('http://' + url, function(response) {
+           console.log('RESPONSE: ' + response);
+         response.pipe(file);
+       
+        });  
+      // }
+      // else {
+      //   console.log('already exists')
+      //   return false;
+      // }
+    });
+  });
 };
