@@ -2,7 +2,7 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="styles.css" />
-  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
   Enter a URL here:
@@ -10,7 +10,23 @@
     <input type="input" name="url"></input>
   </form>
 
- 
+ <script>
+ $("#submit").submit(function() {
+  console.log('making apost request')
+    var url = "http://127.0.0.1:8080/"; // the script where you handle the form input.
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           success: function(data)
+           {
+               alert(data); // show response from the php script.
+           }
+         });
+
+    return false; // avoid to execute the actual submit of the form.
+});
+ </script>
 
 
 </body>

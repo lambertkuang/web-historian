@@ -1,6 +1,7 @@
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var helpers = require('./http-helpers');
+var fs = require('fs');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
@@ -11,7 +12,7 @@ exports.handleRequest = function (req, res) {
         //add the new page to our archive
         
   if (req.method === 'GET') {
-    // if (req.url === '/') {
+     
       var statusCode = 200;
       var headers = helpers.headers;
       helpers.serveAssets(res, __dirname + "/public/index.html", function(err, file) {
@@ -23,7 +24,33 @@ exports.handleRequest = function (req, res) {
           res.end();
         }
       });
-    // } 
-  } 
+     
+  } else if (req.method === 'POST'){
+   
+    var statusCode = 302;
+    var headers = helpers.headers;
+    req.on('data',function(data){
+      var urlName = JSON.parse(data);
+      var url = urlName.url+="\n"
+      fs.appendFile(archive.paths.list,url,function(err){
+        if (err){
+          throw err;
+        }
+        console.log('Done appending to the sites.txt')
+          archive.readListOfUrls(function(data){
+          console.log('yo we are awesome:' + data);
+        });
+          archive.isUrlInList('example1.com');
+      })
+
+    });
+    
+   
+    res.writeHead(statusCode,headers);
+    //res.write()
+    res.end();
+    
+
+  }
   //res.end(archive.paths.list);
 };
