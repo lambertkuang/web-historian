@@ -31,21 +31,10 @@ exports.handleRequest = function (req, res) {
     var headers = helpers.headers;
     req.on('data',function(data){
       var urlName = JSON.parse(data);
-      var url = urlName.url+="\n"
-      fs.appendFile(archive.paths.list,url,function(err){
-        if (err){
-          throw err;
-        }
-        console.log('Done appending to the sites.txt')
-          archive.readListOfUrls(function(data){
-          console.log('yo we are awesome:' + data);
-        });
-          archive.isUrlInList('example1.com');
-      })
+      var url = urlName.url+"\n";
+      archive.addUrlToList(url);
 
     });
-    
-   
     res.writeHead(statusCode,headers);
     //res.write()
     res.end();

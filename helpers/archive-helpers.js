@@ -29,36 +29,48 @@ exports.readListOfUrls = function(callback){
   //should read urls from sites.txt
 
   fs.readFile(exports.paths.list,function(err,data){
-    console.log('attempting to read list of urls')
+    
     if (err){
       throw err
     }
-    
-    callback(data);
+
+    var newData = data.toString().split("\n");
+
+    callback(newData);
+
+
   })
 };
 
-exports.isUrlInList = function(target){
-  var found = false;
+exports.isUrlInList = function(target,callback){
   
-  exports.readListOfUrls(function(data){
-   
-    var urls = data.toString().split("\n");
-   
-    
-    _.each(urls,function(url){
-      
-        if (url === target){
-          found = true;
-        }
-    });
-    
+  exports.readListOfUrls(function(newData){
+    _.each(newData,function(url){
+      if (target === url){
+       callback(true);
+      }
+    })
+    callback(false);
   });
-
-  return found;
+  
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url){
+
+  if (!exports.isUrlInList(url)){
+    
+    //add to sites.txt 
+    fs.appendFile(exports.paths.list,url,function(err){
+      
+        if (err){
+          
+          throw err;
+        }
+    });
+  }
+  
+    
+  
 };
 
 exports.isUrlArchived = function(){
