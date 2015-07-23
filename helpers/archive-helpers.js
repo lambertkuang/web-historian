@@ -55,19 +55,22 @@ exports.isUrlInList = function(target,callback){
   
 };
 
-exports.addUrlToList = function(url){
+exports.addUrlToList = function(url,callback){
 
-  if (!exports.isUrlInList(url)){
+  
     
     //add to sites.txt 
-    fs.appendFile(exports.paths.list,url,function(err){
-      
-        if (err){
-          
-          throw err;
-        }
-    });
-  }
+    if (callback()){
+      fs.appendFile(exports.paths.list,url,function(err){
+        
+          if (err){
+            
+            throw err;
+          }
+      });
+    }
+
+  
   
     
   
